@@ -1,93 +1,71 @@
-// Assignment Code
-var generateBtn = document.querySelector("#generate");
+const button = document.querySelector("#generate");
+const textField = document.querySelector("#password");
 
-function randomInt(min, max) {
-  if (!max) {
-    max = min;
-    min = 0;
-  }
-  var rand = Math.random()
-  return Math.floor(min * (1 - rand) + rand * max);
+let lowercase = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",];
+let uppercase = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",];
+let numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9",];
+let symbol = ["!", "@", "#", "$", "%", "^", "&", "*", ",", "/",];
+
+let param = []
+
+function randomize(min, max) {
+    let random = Math.random()
+    return Math.floor(min * (1 - random) + random * max);
 }
 
-function getRandomItem(list) {
-  return list[randomInt(0, list.length - 1)];
+function randomItem(list) {
+    return list[randomize(0, list.length)];
 }
 
-function generatePassword() {
+function createPassword() {
+    let passwordLength = window.prompt("How many characters would you like your password to be?");
+    let desiredLength = parseInt(passwordLength);
+    console.log(desiredLength);
+    if (isNaN(desiredLength)) {
+        window.alert("Please enter a valid number.");
+        return;
+    }
+    if (desiredLength < 8 || desiredLength > 128) {
+        window.alert("Password must be between 8 and 128 characters.");
+        return;
+    }
+    let yesLowercase = window.confirm("Would you like to include lowercase letters?");
+    let yesUppercase = window.confirm("Would you like to include uppercase letters?");
+    let yesNumbers = window.confirm("Would you like to include numbers?");
+    let yesSpecial = window.confirm("Would you like to include special characters?");
 
-  // 1. prompt the user for the password criteria
-  var userInput = window.prompt("How many characters would you like your password to contain?");
+    if (yesLowercase === true) {
+        param.push(lowercase)
+    }
+    if (yesUppercase === true) {
+        param.push(uppercase)
+    }
+    if (yesNumbers === true) {
+        param.push(numbers)
+    }
+    if (yesSpecial === true) {
+        param.push(symbol)
+    }
+    if(param.length === 0){
+        param.push(lowercase)
+    }
+console.log(param);
 
-  var passwordLength = parseInt(userInput);
+    let password = ""
 
-  if (isNaN(passwordLength)) {
-    window.alert("Please enter a valid number.");
-    return;
-  }
-
-  //    a. password length 8 < 128
-  if (passwordLength < 8 || passwordLength > 128) {
-    window.alert("Password must be between 8 and 128 characters.");
-    return;
-  }
-
-  //    b. lowercase, uppercase, numbers, special characters
-  var userWantsLowercase = window.confirm("Include lowercase?");
-  var userWantsUppercase = window.confirm("Include uppercase?");
-  var userWantsNumbers = window.confirm("Include numbers?");
-  var userWantsSymbols = window.confirm("Include special characters?");
-
-  var lowercaseList = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
-  var uppercaseList = [];
-  var numberList = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
-  var symbolList = ["!", "@", "#", "$", "%", "^", "&", "*", "/", "."];
-
-  var optionsCart = [];
-
-  for (var i = 0; i < lowercaseList.length; i++) {
-    uppercaseList[i] = lowercaseList[i].toUpperCase();
-  }
-
-
-  // 2. validate the input
-  if (userWantsNumbers === true) {
-    optionsCart.push(numberList);
-  }
-  if (userWantsUppercase === true) {
-    optionsCart.push(uppercaseList);
-  }
-  if (userWantsLowercase === true) {
-    optionsCart.push(lowercaseList);
-  }
-  if (userWantsSymbols === true) {
-    optionsCart.push(symbolList);
-  }
-  if (optionsCart.length === 0) {
-    optionsCart.push(lowercaseList);
-  }
-    // 3. generate password
-    var generatedPassword = "";
-
-    for (var i = 0; i < passwordLength; i++) {
-      var randomList = getRandomItem(optionsCart);
-      var randomCharacter = getRandomItem(randomList);
-      generatedPassword += randomCharacter;
+    for (let i = 0; i < desiredLength; i++) {
+        let randomParam = randomItem(param);
+        let finalParam = randomItem(randomParam);
+        password += finalParam;
     }
 
-    // 4. display password on the page
-    return generatedPassword;
+return password;
 
-  }
+}
 
-  // Write password to the #password input
-  function writePassword() {
-    var password = generatePassword();
-    var passwordText = document.querySelector("#password");
+function renderPassword () {
+    let finalPassword = createPassword();
+    textField.value = finalPassword;
+}
 
-    passwordText.value = password;
-
-  }
-
-  // Add event listener to generate button
-  generateBtn.addEventListener("click", writePassword);
+button.addEventListener("click", renderPassword);
