@@ -17,7 +17,7 @@ ___
 
 ## URL
 ___
-* 
+* https://shelcloyd.github.io/password-generator/
 
 ## Contributors
 ___
